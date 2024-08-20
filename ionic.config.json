@@ -1,0 +1,7 @@
+{
+  "name": "EduImprovers",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
