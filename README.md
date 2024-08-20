@@ -27,15 +27,15 @@ EduImprovers is an Ionic Angular application designed to facilitate communicatio
 ## Steps
 
 1. Clone the Repository:
-    - git clone <repository-url>
+    - git clone https://github.com/QuintinReynecke/EduvosProjectFrontend.git
 
 2. Navigate to the Project Directory:
-    - cd EduImprovers
+    - cd EduvosProjectFrontend
 
 3. Install Dependencies:
     - npm install
 
-4. Recommended VS Code Extensions:
+4. Recommended VS Code Extensions: (optional)
     - Ionic
 
 5. Start Development Server:
