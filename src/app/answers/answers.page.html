@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title >Answers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let answer of answers">
+      <ion-label>
+        <h2>Question: {{ answer.question }}</h2>
+        <p>Answer: {{ answer.answer }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
