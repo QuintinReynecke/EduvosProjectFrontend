@@ -1,20 +1,38 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Ask a Question</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Your Question</ion-label>
+        <ion-textarea
+          rows="4"
+          cols="20"
+          placeholder="Ask Your Question"
+          [(ngModel)]="questionText"
+          name="questionText"
+        ></ion-textarea>
+      </ion-item>
+      <ion-button expand="full" (click)="submitQuestion()">Submit</ion-button>
+    </ion-card-content>
+  </ion-card>
+  <ion-label><a (click)="ShowHideGroups()">{{ groupsMessage }}</a></ion-label>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div *ngIf="groupShowHide">
+    <ion-card
+      *ngFor="let group of myGroups;let i=index"
+      (click)="openGroup($event)"
+    >
+      <ion-card-header>
+        <ion-card-title>{{group}}</ion-card-title>
+      </ion-card-header>
+    </ion-card>
   </div>
 </ion-content>
