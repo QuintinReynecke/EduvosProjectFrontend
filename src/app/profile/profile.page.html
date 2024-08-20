@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Your Profile</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>Name: </ion-label>
+        <ion-input [(ngModel)]="profile.name" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Email: </ion-label>
+        <ion-input [(ngModel)]="profile.email" readonly></ion-input>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
