@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit{
   public questionText: string = ''; 
   public groupShowHide:boolean = false;
   public groupsMessage: string= "View Groups...";
@@ -17,6 +17,10 @@ export class HomePage {
   ]
 
   constructor() {}
+  ngOnInit(): void {
+    console.log("something broke")
+  }
+
 
   submitQuestion() {
     if (this.questionText) {

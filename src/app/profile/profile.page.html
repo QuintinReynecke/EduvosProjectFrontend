@@ -5,7 +5,26 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <p> Add a way to join a group </p>
+  <p> Admin user to assign groups and also send update emails </p>
+  <ion-card *ngIf="!loginShow" >
+    <ion-card-header>
+      <ion-card-title>login to yur profile</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label>email (Vossie): </ion-label>
+        <ion-input [(ngModel)]="profile.name" type="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>password: </ion-label>
+        <ion-input [(ngModel)]="profile.email" type="password"></ion-input>
+      </ion-item>
+    </ion-card-content>
+    <ion-button (click)="test()">login</ion-button>
+  </ion-card>
+ 
+  <ion-card *ngIf="loginShow" >
     <ion-card-header>
       <ion-card-title>Your Profile</ion-card-title>
     </ion-card-header>
