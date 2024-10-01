@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { httpConfig } from './httpConfig'
 import { insertMod } from './DatabaseConnection/DataModel'
-import { insertModServiceList } from './DatabaseConnection/DataModelServiceList'
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +17,6 @@ export class PutRequestsService {
   ) {}
 
   DataModel: insertMod = {} as any
-  DataModelService: insertModServiceList = {} as any
 
  
 }
