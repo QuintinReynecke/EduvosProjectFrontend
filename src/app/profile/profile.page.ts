@@ -213,11 +213,6 @@ export class ProfilePage implements OnInit {
       .verifyEmail(this.username, verificationCode)
       .then(() => {
         this.confirmationMessage();
-        this.postRequestsService.addUser(
-          this.username,
-          this.password,
-          this.userType
-        );
       })
       .catch((err) => {
         alert('Email verification failed. Please try again later.');

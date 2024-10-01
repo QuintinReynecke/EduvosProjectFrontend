@@ -28,6 +28,7 @@ export class FaqPage implements OnInit {
 
   getFAQbasedOnDepartment(choice:any){
     this.FAQListOBJ = this.getRequestsService.getFAQList(choice)
+    console.log(this.FAQListOBJ)
   }
 
   // async SearchFAQList() {
