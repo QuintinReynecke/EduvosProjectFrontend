@@ -6,10 +6,26 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let faq of faqs">
+    <ion-item>
+      <ion-label class="labelStyle">Department</ion-label>
+      <ion-button
+        class="filterButtons"
+        (click)="serviceSelect.openModalDialog()"
+      >
+        {{ selectedDepartment || 'Select Department' }}
+      </ion-button>
+      <app-custom-select
+        [options]="FAQListOBJ"
+        placeholder="{{selectedDepartment}}"
+        (selectedOption)="selectedDepartment = $event"
+        #serviceSelect
+      ></app-custom-select>
+    </ion-item>
+    <ion-item *ngFor="let faq of FAQListOBJ">
       <ion-label>
         <h2>{{ faq.question }}</h2>
         <p>{{ faq.answer }}</p>
+        <p>{{ faq.department }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

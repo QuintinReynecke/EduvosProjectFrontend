@@ -16,12 +16,24 @@
 
       <ion-tab-button tab="answers">
         <ion-icon name="chatbubbles"></ion-icon>
-        <ion-label>Answers</ion-label>
+        <ion-label>Ask</ion-label>
         <ion-router-link routerLink="/answers"></ion-router-link>
       </ion-tab-button>
 
       <ion-tab-button tab="profile">
-        <ion-icon name="person"></ion-icon>
+        <!-- <ion-icon name="person"></ion-icon> -->
+        <div *ngIf="!ProfilePicture">
+          <ion-icon
+            name="person-circle-outline"
+            style="color: white; font-size: 27px; text-align: center"
+          ></ion-icon>
+        </div>
+        <div *ngIf="ProfilePicture">
+          <img
+            src="{{ ProfilePicture }}"
+            style="width: 25px; height: 25px; border-radius: 100%"
+          />
+        </div>
         <ion-label>Profile</ion-label>
         <ion-router-link routerLink="/profile"></ion-router-link>
       </ion-tab-button>

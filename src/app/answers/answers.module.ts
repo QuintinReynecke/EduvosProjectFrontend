@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { AnswersPageRoutingModule } from './answers-routing.module';
 
 import { AnswersPage } from './answers.page';
+import { CustomSelectPageModule } from '../reusable-components/custom-select/custom-select.module'
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AnswersPageRoutingModule
+    AnswersPageRoutingModule,
+    CustomSelectPageModule
   ],
   declarations: [AnswersPage]
 })

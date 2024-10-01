@@ -36,7 +36,133 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
 
-
 ion-title {
     text-align: center;
+}
+
+.Center_Text {
+    text-align: center;
+    color: black;
+}
+
+.labelStyle {
+    margin-left: 5%;
+    color: black;
+}
+
+.textBoxStyle {
+    color: black;
+    width: 90%;
+    padding: 12px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    background-color: white;
+    margin-left: 5%;
+}
+
+.textBoxStyle.input-success {
+    border: 2px solid green;
+}
+
+.textBoxStyle.input-failure {
+    border: 2px solid red;
+}
+
+ion-select,
+select,
+ion-textarea {
+    color: black;
+    width: 90%;
+    padding: 12px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+    // background-color: white;
+    margin-left: 5%;
+}
+
+input[type="checkbox"] {
+    margin-left: 5%;
+}
+
+.ModalPopupBox {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #474e5d;
+    margin-top: 10%;
+}
+
+.ContainerPopupBox {
+    width: 100%;
+    height: 90%;
+}
+
+.ContainerPopupClose {
+    color: #039ef1;
+    background-color: #023e8a;
+    margin-left: 80%;
+    font-size: xx-large;
+}
+
+.ContainerPopupCloseFooter {
+    background-color: #039ef1;
+    color: white;
+    height: 40px;
+    width: 46%;
+    margin-top: 3%;
+    margin-left: 25%;
+    border-radius: 13px;
+}
+
+.pdf-viewer {
+    height: 20vh;
+    width: 80vw;
+    display: block;
+    margin: 0 auto;
+}
+
+.pdf-viewer-CR {
+    height: 200vh;
+    width: 80vw;
+    display: block;
+    margin: 0 auto;
+}
+
+.pdf-controls {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#topDiv {
+    max-height: 90%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
+    padding: 20px;
+    height: 90%;
+    margin-top: 10%;
+    margin-left: 5%;
+}
+
+#insideDiv {
+    overflow-y: auto;
 }

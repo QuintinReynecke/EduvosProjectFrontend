@@ -1,17 +1,46 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title >Answers</ion-title>
+    <ion-title>Ask for assistance</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <p>This page should be for asking questions to the SSA's</p>
-  <ion-list>
-    <ion-item *ngFor="let answer of answers">
-      <ion-label>
-        <h2>Question: {{ answer.question }}</h2>
-        <p>Answer: {{ answer.answer }}</p>
-      </ion-label>
+  <div *ngIf="!isAuthenticated">
+    <h5>Log in to your account to ask questions...</h5>
+  </div>
+  <div *ngIf="isAuthenticated">
+    <ion-item>
+      <ion-label class="labelStyle">Department</ion-label>
+      <ion-button
+        class="filterButtons"
+        (click)="serviceSelect.openModalDialog()"
+      >
+        {{ department || 'Select Department' }}
+      </ion-button>
+      <app-custom-select
+        [options]="DepartmentListOBJ"
+        placeholder="{{department}}"
+        (selectedOption)="department = $event"
+        #serviceSelect
+      ></app-custom-select>
     </ion-item>
-  </ion-list>
+    <ion-item>
+      <ion-label>Faculty Type (Lecturer/SSA/Finance): </ion-label>
+      <ion-input [(ngModel)]="facultyType"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Your Question</ion-label>
+      <ion-textarea
+        rows="4"
+        cols="20"
+        placeholder="Ask Your Question"
+        [(ngModel)]="question"
+        name="questionText"
+      ></ion-textarea>
+    </ion-item>
+
+    <ion-button expand="full" (click)="askDepartmentTheQuestion()"
+      >Ask {{ department }}</ion-button
+    >
+  </div>
 </ion-content>

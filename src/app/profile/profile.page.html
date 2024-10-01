@@ -5,38 +5,246 @@
 </ion-header>
 
 <ion-content>
-  <p> Add a way to join a group </p>
-  <p> Admin user to assign groups and also send update emails </p>
-  <ion-card *ngIf="!loginShow" >
-    <ion-card-header>
-      <ion-card-title>login to yur profile</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item>
-        <ion-label>email (Vossie): </ion-label>
-        <ion-input [(ngModel)]="profile.name" type="email"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>password: </ion-label>
-        <ion-input [(ngModel)]="profile.email" type="password"></ion-input>
-      </ion-item>
-    </ion-card-content>
-    <ion-button (click)="test()">login</ion-button>
+  <ion-card *ngIf="!loginShow">
+    <button
+      class="Login_RegisterButtonStyle"
+      [ngStyle]="{'background':LoginColor,'color':RegisterColor}"
+      (click)="SwitchLoginRegister('Login')"
+    >
+      <b>Login</b>
+    </button>
+    <button
+      class="Login_RegisterButtonStyle"
+      [ngStyle]="{'background':RegisterColor,'color':LoginColor}"
+      (click)="SwitchLoginRegister('Register')"
+    >
+      <b>Register</b>
+    </button>
+
+    <!-- Login Section -->
+    <div *ngIf="ShowLogin">
+      <ion-card>
+        <ion-title>
+          <br />
+          <ion-card-title>Login</ion-card-title>
+        </ion-title>
+        <br />
+        <ion-card-title>Email address (username):</ion-card-title>
+        <ion-input
+          placeholder="email@gmail.com"
+          type="email"
+          [(ngModel)]="username"
+          name="username"
+          class="textBoxStyle"
+        ></ion-input>
+
+        <ion-card-title>Password:</ion-card-title>
+        <ion-input
+          type="password"
+          placeholder="password"
+          [(ngModel)]="password"
+          class="textBoxStyle"
+        ></ion-input>
+
+        <div>
+          <ion-card-subtitle>
+            By signing in, you agree to our
+            <a (click)="termsAndConditionsBoxShow()">Terms & Privacy</a>
+          </ion-card-subtitle>
+        </div>
+        <!-- <p class="labelStyle">
+          Forgot password,
+          <a (click)="ForgotPasswordBoxShow()">reset your password?</a>
+          .
+        </p> -->
+        <ion-row>
+          <ion-col>
+            <ion-button expand="full" (click)="login()">Login</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+
+      <div *ngIf="errorLoginMessage" class="error-message">
+        <b>{{ errorLoginMessage }}</b>
+      </div>
+    </div>
+
+    <!-- Register Section -->
+    <div *ngIf="!ShowLogin">
+      <ion-card>
+        <ion-title>
+          <br />
+          <ion-card-title>Register</ion-card-title>
+        </ion-title>
+        <br />
+        <ion-card-title>Email address (username):</ion-card-title>
+        <ion-input
+          type="email"
+          placeholder="email@gmail.com"
+          [(ngModel)]="username"
+          class="textBoxStyle"
+        ></ion-input>
+        <ion-card-title>User Type:</ion-card-title>
+        <ion-select class="textBoxStyle" [(ngModel)]="userType" name="userType">
+          <ion-select-option value="Student">Student</ion-select-option>
+          <ion-select-option value="Lecturer">Lecturer</ion-select-option>
+          <ion-select-option value="SSA">SSA</ion-select-option>
+        </ion-select>
+        <ion-card-title>Password:</ion-card-title>
+        <ion-input
+          type="password"
+          placeholder="password"
+          [(ngModel)]="password"
+          class="textBoxStyle"
+          (ngModelChange)="validatePassword()"
+        ></ion-input>
+        <div *ngIf="passwordMessage" class="password-hint">
+          <ion-icon
+            *ngIf="passwordValid"
+            name="checkmark-circle-outline"
+            class="success-icon"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="!passwordValid"
+            name="close-circle-outline"
+            class="failure-icon"
+          ></ion-icon>
+          <span
+            [ngClass]="{'failure-text': !passwordValid, 'success-text': passwordValid}"
+          >
+            {{ passwordMessage }}
+          </span>
+        </div>
+
+        <ion-card-title>Confirm Password:</ion-card-title>
+        <ion-input
+          type="password"
+          placeholder="confirm password"
+          [(ngModel)]="confirmPassword"
+          class="textBoxStyle"
+        ></ion-input>
+
+        <div>
+          <ion-card-subtitle for="TandC">
+            <input type="checkbox" id="TandC" [(ngModel)]="TandC" />
+            I accept the
+            <a (click)="termsAndConditionsBoxShow()">Terms & Conditions</a>
+          </ion-card-subtitle>
+          <br />
+        </div>
+
+        <ion-row>
+          <ion-col>
+            <ion-button expand="full" (click)="signUp()">Sign Up</ion-button>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="full" (click)="promptVerificationCode()">
+              Verification Code
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </div>
   </ion-card>
- 
-  <ion-card *ngIf="loginShow" >
+
+  <ion-card *ngIf="loginShow">
     <ion-card-header>
       <ion-card-title>Your Profile</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
-        <ion-label>Name: </ion-label>
-        <ion-input [(ngModel)]="profile.name" readonly></ion-input>
+        <ion-label  position="floating">Profile Picture: </ion-label>
+        <ion-card-header class="Center_Text">
+          <img
+            [src]="profilePicture"
+            alt="Person_Profile_Pic"
+            width="100"
+          />
+        </ion-card-header>
+        <ion-button expand="full">
+          <ion-icon
+            lazy="true"
+            slot="start"
+            name="person-circle-outline"
+          ></ion-icon>
+          <ion-label slot="end">...</ion-label>
+          <input
+            type="file"
+            (change)="loadProfilePicFromDevice($event)"
+            id="file-input"
+            accept="image/PNG, image/jpeg"
+          />
+        </ion-button>
       </ion-item>
       <ion-item>
-        <ion-label>Email: </ion-label>
-        <ion-input [(ngModel)]="profile.email" readonly></ion-input>
+        <ion-label  position="floating">Email: </ion-label>
+        <ion-input [(ngModel)]="username" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label  position="floating">Department: </ion-label>
+        <ion-input [(ngModel)]="department" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label  position="floating">User Type: </ion-label>
+        <ion-input [(ngModel)]="userType" readonly></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label  position="floating">Name: </ion-label>
+        <ion-input [(ngModel)]="name"></ion-input>
       </ion-item>
     </ion-card-content>
   </ion-card>
+
+  <!-- TermsAndConditions Box -->
+  <div id="TermsAndConditions" class="ModalPopupBox">
+    <div class="ContainerPopupBox">
+      <div id="topDiv">
+        <button
+          class="ContainerPopupClose"
+          (click)="termsAndConditionsBoxHide()"
+        >
+          <b>X</b>
+        </button>
+        <div id="insideDiv">
+          <div class="pdf-controls">
+            <ion-button (click)="zoomIn()">Zoom In</ion-button>
+            <ion-button (click)="zoomOut()">Zoom Out</ion-button>
+          </div>
+          <pdf-viewer
+            src="{{pdfUrl}}"
+            [render-text]="true"
+            [original-size]="true"
+            [zoom]="zoom"
+            [show-all]="true"
+            style="display: block"
+            [fit-to-page]="true"
+            [stick-to-page]="true"
+            class="pdf-viewer-CR"
+          ></pdf-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer *ngIf="HideShowTC">
+  <div>
+    <ion-button
+      class="ContainerPopupCloseFooter"
+      (click)="termsAndConditionsBoxHide()"
+    >
+      <b>Close</b>
+    </ion-button>
+  </div>
+</ion-footer>
+
+<ion-footer *ngIf="ShowLogoutFooter">
+  <ion-button style="width: 100%" (click)="signOut()">
+    <div>
+      Logout
+      <ion-icon name="log-out" class="icon-style"></ion-icon>
+    </div>
+  </ion-button>
+</ion-footer>

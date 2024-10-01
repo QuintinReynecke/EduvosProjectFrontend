@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../helpers/authService.service';
 
 @Component({
   selector: 'app-answers',
@@ -6,16 +7,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./answers.page.scss'],
 })
 export class AnswersPage implements OnInit {
+  constructor(private authService: AuthService) {}
 
-  constructor() { }
-
-  answers = [
-    { question: 'What is the exam schedule?', answer: 'The exam schedule will be posted in the "Exams" section.' },
-    { question: 'How do I contact SAA?', answer: 'You can contact SAA via the "Help" section.' },
-  ];
-
+  public isAuthenticated:boolean = false
+  public DepartmentListOBJ: any;
+  public facultyType: any;
+  public question: any;
+  public answer: any;
+  public department: any;
 
   ngOnInit() {
+    this.DepartmentListOBJ = this.authService.getDepartment();
+    this.checkAuthentication()
   }
 
+  checkAuthentication() {
+    this.isAuthenticated = this.authService.isAuthenticated();
+  }
+
+  askDepartmentTheQuestion() {
+    const currentDate = new Date();
+    console.log('Date: ', currentDate);
+    console.log('Faculty: ', this.facultyType);
+    console.log('Department: ', this.department);
+    console.log('Question: ', this.question);
+  }
 }

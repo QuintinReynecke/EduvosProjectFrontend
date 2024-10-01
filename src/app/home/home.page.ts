@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../helpers/authService.service';
 
 @Component({
   selector: 'app-home',
@@ -6,21 +8,36 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit{
+  public isAuthenticated:boolean = false
   public questionText: string = ''; 
   public groupShowHide:boolean = false;
   public groupsMessage: string= "View Groups...";
   myGroups: string[] = [
-    "IT something 1",
-    "IT something 2",
-    "IT something 3",
-    "IT something 4",
+    "IT Group 1",
+    "IT Group 2",
+    "IT Group 3",
+    "IT Group 4",
   ]
 
-  constructor() {}
+  constructor(private router: Router, private authService: AuthService,) {}
+
+  public username:any
   ngOnInit(): void {
-    console.log("something broke")
+    this.checkAuthentication()
   }
 
+  checkAuthentication() {
+    this.isAuthenticated = this.authService.isAuthenticated();
+
+    if (!this.isAuthenticated) {
+      this.username = "please log in...";
+      return;
+    } else {
+      // User is authenticated
+      this.username = this.authService.getUsername();
+    }
+    
+  }
 
   submitQuestion() {
     if (this.questionText) {
@@ -39,6 +56,7 @@ export class HomePage implements OnInit{
   }
 
   openGroup(groupSelect: any) {
+    this.router.navigate(['/group-chat'])
     console.log('Group selected: ', groupSelect.target.outerText);
   }
 }

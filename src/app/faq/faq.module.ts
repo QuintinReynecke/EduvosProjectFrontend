@@ -7,13 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { FaqPageRoutingModule } from './faq-routing.module';
 
 import { FaqPage } from './faq.page';
+import { CustomSelectPageModule } from '../reusable-components/custom-select/custom-select.module'
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    FaqPageRoutingModule
+    FaqPageRoutingModule,
+    CustomSelectPageModule
   ],
   declarations: [FaqPage]
 })
