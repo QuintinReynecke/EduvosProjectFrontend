@@ -150,50 +150,97 @@
   </ion-card>
 
   <ion-card *ngIf="loginShow">
-    <ion-card-header>
-      <ion-card-title>Your Profile</ion-card-title>
+    <ion-card-header class="Center_Text">
+      <ion-card-title>User Information</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <ion-item>
-        <ion-label  position="floating">Profile Picture: </ion-label>
-        <ion-card-header class="Center_Text">
-          <img
-            [src]="profilePicture"
-            alt="Person_Profile_Pic"
-            width="100"
-          />
-        </ion-card-header>
-        <ion-button expand="full">
-          <ion-icon
-            lazy="true"
-            slot="start"
-            name="person-circle-outline"
-          ></ion-icon>
-          <ion-label slot="end">...</ion-label>
-          <input
-            type="file"
-            (change)="loadProfilePicFromDevice($event)"
-            id="file-input"
-            accept="image/PNG, image/jpeg"
-          />
-        </ion-button>
-      </ion-item>
-      <ion-item>
-        <ion-label  position="floating">Email: </ion-label>
+        <ion-label position="floating">Email: </ion-label>
         <ion-input [(ngModel)]="username" readonly></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label  position="floating">Department: </ion-label>
-        <ion-input [(ngModel)]="department" readonly></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label  position="floating">User Type: </ion-label>
+        <ion-label position="floating">User Type: </ion-label>
         <ion-input [(ngModel)]="userType" readonly></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label  position="floating">Name: </ion-label>
+        <ion-label>Department</ion-label>
+        <ion-button
+          class="filterButtons"
+          (click)="serviceSelect.openModalDialog()"
+        >
+          {{ department || 'Select Department' }}
+        </ion-button>
+      </ion-item>
+      <app-custom-select
+        [options]="DepartmentListOBJ"
+        placeholder="{{department}}"
+        (selectedOption)="department = $event"
+        #serviceSelect
+      ></app-custom-select>
+      <br />
+      <ion-card-header class="Center_Text">
+        <ion-card-title>Personal Information</ion-card-title>
+      </ion-card-header>
+      <ion-item>
+        <ion-card>
+          <ion-label>Profile Picture: </ion-label>
+          <br />
+          <br />
+          <ion-card-header class="Center_Text">
+            <img
+              [src]="profilePicture"
+              alt="Person_Profile_Pic"
+              width="100px"
+            />
+          </ion-card-header>
+          <ion-button expand="full">
+            <ion-icon
+              lazy="true"
+              slot="start"
+              name="person-circle-outline"
+            ></ion-icon>
+            <ion-label slot="end">...</ion-label>
+            <input
+              type="file"
+              (change)="loadProfilePicFromDevice($event)"
+              id="file-input"
+              accept="image/PNG, image/jpeg"
+            />
+          </ion-button>
+        </ion-card>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Name: </ion-label>
         <ion-input [(ngModel)]="name"></ion-input>
       </ion-item>
+      <br />
+      <ion-card-header class="Center_Text">
+        <ion-card-title>Groups Selection</ion-card-title>
+      </ion-card-header>
+      <ion-item>
+        <ion-select
+          multiple="true"
+          cancelText="Cancel"
+          placeholder="Select Group(s)"
+          name="selectedGroup"
+          [(ngModel)]="selectedGroup"
+          (ionChange)="onSelectGroup()"
+        >
+          <ion-select-option
+            *ngFor="let group of groupSelectMenu"
+            [value]="group.code"
+          >
+            {{ group.code }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ng-container *ngIf="selectedGroup.length > 0">
+        <ng-container *ngFor="let category of selectedGroup">
+          <ion-item style="margin-left: 20px">
+            <ion-label><strong>• {{ category }}</strong></ion-label>
+          </ion-item>
+        </ng-container>
+      </ng-container>
     </ion-card-content>
   </ion-card>
 
@@ -238,6 +285,10 @@
       <b>Close</b>
     </ion-button>
   </div>
+</ion-footer>
+
+<ion-footer *ngIf="loginShow">
+  <ion-button style="width: 100%" (click)="updateUser()"> Update </ion-button>
 </ion-footer>
 
 <ion-footer *ngIf="ShowLogoutFooter">

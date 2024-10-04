@@ -13,7 +13,7 @@
 
     <div *ngIf="groupShowHide">
       <ion-card
-        *ngFor="let group of myGroups;let i=index"
+        *ngFor="let group of selectedGroup;let i=index"
         (click)="openGroup($event)"
       >
         <ion-card-header>

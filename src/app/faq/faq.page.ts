@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { GetRequestsService } from '../helpers/getRequests.service'
+import { GetRequestsService } from '../helpers/getRequests.service';
 import { AuthService } from '../helpers/authService.service';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-faq',
@@ -8,8 +9,10 @@ import { AuthService } from '../helpers/authService.service';
   styleUrls: ['./faq.page.scss'],
 })
 export class FaqPage implements OnInit {
-
-  constructor(private getRequestsService: GetRequestsService, private authService: AuthService,) { }
+  constructor(
+    private getRequestsService: GetRequestsService,
+    private authService: AuthService
+  ) {}
   answers = [
     {
       question: 'What is the exam schedule?',
@@ -20,15 +23,36 @@ export class FaqPage implements OnInit {
       answer: 'You can contact SAA via the "Help" section.',
     },
   ];
-  public FAQListOBJ:any;
-  public selectedDepartment:any = "All"
+  public FAQListOBJ: any[] = [];
+  public selectedDepartment: any = 'ALL';
+  public selectedFAQ: any = [];
+
   ngOnInit() {
-    this.getFAQbasedOnDepartment(this.selectedDepartment)
+    // this.getRequestsService
+    //   .getFAQListFilter()
+    //   .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+    //   .subscribe((FAQ: any) => {
+    //     this.selectedFAQ = ['ALL', ...FAQ];
+    //   });
+    // this.getFAQbasedOnDepartment(this.selectedDepartment);
   }
 
-  getFAQbasedOnDepartment(choice:any){
-    this.FAQListOBJ = this.getRequestsService.getFAQList(choice)
-    console.log(this.FAQListOBJ)
+  ionViewWillEnter() {
+    this.getRequestsService
+      .getFAQListFilter()
+      .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+      .subscribe((FAQ: any) => {
+        this.selectedFAQ = ['ALL', ...FAQ];
+      });
+    this.getFAQbasedOnDepartment(this.selectedDepartment);
+  }
+
+  getFAQbasedOnDepartment(department: string) {
+    this.selectedDepartment = department; // Update the selected department
+    this.FAQListOBJ = this.getRequestsService.getFAQList(
+      this.selectedDepartment
+    );
+    console.log(this.FAQListOBJ); // Call to filter FAQs based on the new department
   }
 
   // async SearchFAQList() {
@@ -37,11 +61,10 @@ export class FaqPage implements OnInit {
   //       .getFAQSearch(this.SearchFAQ)
   //       .toPromise()
   //     if (finalList) {
-        
+
   //     }
   //   } catch (error) {
   //     console.error('Failed to fetch details', error)
   //   }
   // }
-
 }

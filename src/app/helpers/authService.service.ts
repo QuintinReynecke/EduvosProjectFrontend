@@ -100,6 +100,13 @@ export class AuthService {
     )
   }
 
+  getProfileID(): any{
+    return (
+      localStorage.getItem('id') ||
+      'null'
+    )
+  }
+
   // Refresh the access token using the refresh token
   refreshToken(): Observable<any> {
     const refreshToken = this.getRefreshToken()
@@ -194,6 +201,7 @@ export class AuthService {
       })
       .catch((err) => {
         console.error('Registration failed:', err)
+        alert( `Registration failed: ${err}`)
       })
   }
 

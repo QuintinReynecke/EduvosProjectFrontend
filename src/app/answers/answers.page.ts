@@ -1,5 +1,8 @@
+import { PostRequestsService } from '../helpers/postRequests.service';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../helpers/authService.service';
+import { GetRequestsService } from '../helpers/getRequests.service';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-answers',
@@ -7,18 +10,37 @@ import { AuthService } from '../helpers/authService.service';
   styleUrls: ['./answers.page.scss'],
 })
 export class AnswersPage implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private getRequestsService: GetRequestsService,
+    private postRequestsService:PostRequestsService
+  ) {}
 
-  public isAuthenticated:boolean = false
-  public DepartmentListOBJ: any;
+  public isAuthenticated: boolean = false;
+  public DepartmentListOBJ: any[] = [];
   public facultyType: any;
   public question: any;
   public answer: any;
   public department: any;
 
   ngOnInit() {
-    this.DepartmentListOBJ = this.authService.getDepartment();
-    this.checkAuthentication()
+    this.getRequestsService
+      .getDepartmentListFilter()
+      .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+      .subscribe((Department: any) => {
+        this.DepartmentListOBJ = Department;
+      });
+    this.checkAuthentication();
+  }
+
+  ionViewWillEnter() {
+    this.getRequestsService
+      .getDepartmentListFilter()
+      .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+      .subscribe((Department: any) => {
+        this.DepartmentListOBJ = Department;
+      });
+    this.checkAuthentication();
   }
 
   checkAuthentication() {
@@ -26,10 +48,7 @@ export class AnswersPage implements OnInit {
   }
 
   askDepartmentTheQuestion() {
-    const currentDate = new Date();
-    console.log('Date: ', currentDate);
-    console.log('Faculty: ', this.facultyType);
-    console.log('Department: ', this.department);
-    console.log('Question: ', this.question);
+   
+    this.postRequestsService.newPersonalChat(this.facultyType,this.question, this.department)
   }
 }

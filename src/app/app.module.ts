@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './helpers/auth-interceptor.service';
 import { httpConfig } from './helpers/httpConfig'
+import { MySharedService } from './helpers/MySharedService'
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,8 @@ import { httpConfig } from './helpers/httpConfig'
       useClass: AuthInterceptor, // Your interceptor to handle JWT token
       multi: true, // Important for adding multiple interceptors if needed
     },
-    httpConfig
+    httpConfig,
+    MySharedService
   ],
   bootstrap: [AppComponent],
 })

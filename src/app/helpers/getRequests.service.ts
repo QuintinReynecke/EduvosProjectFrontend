@@ -19,21 +19,41 @@ export class GetRequestsService {
   public GroupsListOBJ: any = [];
   public GroupsListInOBJ: any = {};
 
-  // getAllServices(): Observable<any> {
-  //   return this.http.get(`${this.connString}getServiceList`)
-  // }
+  getAllGroups(department:string): Observable<any> {
+    return this.http.get(`${this.connString}getGroupsList/${department}`)
+  }
 
-  // getServiceType(category: string): Observable<any> {
-  //   return this.http.get(`${this.connString}getServiceT/${category}`)
-  // }
+  getUserInfo(userID: any): Observable<any> {
+    return this.http.get(`${this.connString}getUserInfo/${userID}`)
+  }
+
+  getGroupChatInfo(groupID: any): Observable<any> {
+    return this.http.get(`${this.connString}getGroupChatInfo/${groupID}`)
+  }
+
+  getGroupID(groupName: any): Observable<any> {
+    return this.http.get(`${this.connString}getGroupID/${groupName}`)
+  }
+
+  getFAQListFilter(): Observable<string[]> {
+    return this.http.get<any[]>(this.connString + 'getFAQList/ALL').pipe(
+      map((GetAllFAQList) => {
+        return GetAllFAQList.map(
+          (FAQ) => FAQ?.department // Filter by subcategory
+        ).filter(Boolean)
+      })
+    )
+  }
 
   getFAQList(department: string) {
+    // Clear FAQListOBJ here to avoid duplicates
+    this.FAQListOBJ = [];
     this.http
       .get(this.connString + 'getFAQList/' + department)
       .subscribe((GetAllFAQList: any) => {
         this.testBool = false;
         this.counter = 0;
-
+        // Loop through and push each FAQ to the list
         while (this.testBool != true) {
           this.FAQListInOBJ = {};
           if (GetAllFAQList[this.counter] == undefined) {
@@ -46,10 +66,12 @@ export class GetRequestsService {
           this.counter++;
         }
       });
+    // Return the FAQ list after it has been updated
     return this.FAQListOBJ;
   }
 
   getGroupsList(department: string) {
+    this.GroupsListOBJ = [];
     this.http
       .get(this.connString + 'getGroupsList/' + department)
       .subscribe((GetAllGroupsList: any) => {
@@ -74,6 +96,7 @@ export class GetRequestsService {
   public SubjectListOBJ: any = []
   public SubjectListInOBJ: any = {}
   getSubjectList(department: string) {
+    this.SubjectListOBJ = [];
     this.http
       .get(this.connString + 'getSubjectList/' + department)
       .subscribe((GetAllSubjectList: any) => {
@@ -97,10 +120,23 @@ export class GetRequestsService {
 
   public DepartmentListOBJ: any = []
   public DepartmentListInOBJ: any = {}
+
+  getDepartmentListFilter(): Observable<string[]> {
+    return this.http.get<any[]>(this.connString + 'getDepartmentList').pipe(
+      map((GetAllDepartmentList) => {
+        return GetAllDepartmentList.map(
+          (Department) => Department?.name // Filter by subcategory
+        ).filter(Boolean)
+      })
+    )
+  }
+
   getDepartmentList() {
+    this.DepartmentListOBJ = [];
     this.http
       .get(this.connString + 'getDepartmentList')
       .subscribe((GetAllDepartmentList: any) => {
+        console.log(GetAllDepartmentList)
         this.testBool = false
         this.counter = 0
 

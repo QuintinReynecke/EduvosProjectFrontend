@@ -1,9 +1,12 @@
+import { PutRequestsService } from '../helpers/putRequests.service';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '../helpers/authService.service';
 import { AlertController } from '@ionic/angular';
 import { PostRequestsService } from '../helpers/postRequests.service';
-import { LoadingController } from '@ionic/angular'
+import { LoadingController } from '@ionic/angular';
+import { GetRequestsService } from '../helpers/getRequests.service';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +19,9 @@ export class ProfilePage implements OnInit {
     public alertController: AlertController,
     private router: Router,
     private authService: AuthService,
-    private postRequestsService: PostRequestsService
+    private postRequestsService: PostRequestsService,
+    private putRequestsService: PutRequestsService,
+    private getRequestsService: GetRequestsService
   ) {}
 
   loginShow: boolean = false;
@@ -35,15 +40,36 @@ export class ProfilePage implements OnInit {
   public HideShowTC = false;
   public TandC: any;
 
+  public DepartmentListOBJ: any[] = [];
+
+  // Groups
+  groupSelectMenu: any;
+
   ngOnInit() {
     this.checkAuthentication();
+    this.getRequestsService
+      .getDepartmentListFilter()
+      .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+      .subscribe((Department: any) => {
+        this.DepartmentListOBJ = Department;
+      });
+  }
+
+  ionViewWillEnter() {
+    this.checkAuthentication();
+    this.getRequestsService
+      .getDepartmentListFilter()
+      .pipe(debounceTime(300)) // Adding debounce to avoid quick successive calls
+      .subscribe((Department: any) => {
+        this.DepartmentListOBJ = Department;
+      });
   }
 
   ngAfterViewInit() {
     this.checkAuthentication();
   }
 
-  checkAuthentication() {
+  async checkAuthentication() {
     const isAuthenticated = this.authService.isAuthenticated();
 
     if (!isAuthenticated) {
@@ -58,8 +84,37 @@ export class ProfilePage implements OnInit {
       this.userType = this.authService.getUserType();
       this.loginShow = true;
       this.ShowLogoutFooter = true;
+      await this.loadGroups();
+      await this.getUserInformation();
     }
-    
+  }
+
+  async getUserInformation() {
+    try {
+      const userInfo = await this.getRequestsService
+        .getUserInfo(this.authService.getProfileID())
+        .toPromise();
+      if (userInfo) {
+        this.profilePicture = userInfo[0].profilePicture;
+        this.name = userInfo[0].name;
+        this.password = userInfo[0].password;
+        this.userType = userInfo[0].type;
+        this.department = userInfo[0].department;
+
+        // Clean up escape characters from groups strings
+        const cleanedGroups = userInfo[0].groups
+          .replace(/\\\"/g, '')
+          .split('", "')
+          .map((groups: string) => groups.trim())
+          .filter((groups: string) => groups.length > 0); // Filter out empty groups
+
+        this.selectedGroup = cleanedGroups;
+        console.log('cleanedGroups');
+        console.log(this.selectedGroup);
+      }
+    } catch (error) {
+      console.error('Failed to fetch user details', error);
+    }
   }
 
   public signOut(): void {
@@ -73,12 +128,12 @@ export class ProfilePage implements OnInit {
       message: 'Loading data...',
       spinner: 'crescent',
       backdropDismiss: true,
-    })
-    await loading.present()
+    });
+    await loading.present();
   }
 
   async dismissLoading() {
-    await this.loadingController.dismiss()
+    await this.loadingController.dismiss();
   }
 
   ShowLogin: boolean = true;
@@ -108,24 +163,22 @@ export class ProfilePage implements OnInit {
       this.errorLoginMessage = 'Please enter valid login credentials.';
       return;
     }
-    await this.presentLoading()
+    await this.presentLoading();
     this.authService
       .login(this.username, this.password)
       .then(() => {
         this.checkAuthentication();
-        this.dismissLoading()
+        this.dismissLoading();
       })
       .catch((err) => {
         this.errorLoginMessage = 'Login failed. Please try again later.';
         console.error('Login error', err);
         this.checkAuthentication();
-        this.dismissLoading()
+        this.dismissLoading();
       });
-     
   }
 
   signUp() {
-    
     this.validatePassword();
     if (!this.TandC || !this.passwordValid) this.promptValidCheck();
     else {
@@ -167,16 +220,16 @@ export class ProfilePage implements OnInit {
       alert('Please fill in all required fields.');
       return;
     }
-    await this.presentLoading()
+    await this.presentLoading();
     this.authService
       .registerUser(this.username, this.password, this.userType)
       .then(() => {
         this.promptVerificationCode();
-        this.dismissLoading()
+        this.dismissLoading();
       })
       .catch((err: any) => {
         alert('Registration failed. Please try again later.');
-        this.dismissLoading()
+        this.dismissLoading();
       });
   }
 
@@ -262,7 +315,7 @@ export class ProfilePage implements OnInit {
     if (termsAndConditionsBoxElement) {
       termsAndConditionsBoxElement.style.display = 'block';
       this.HideShowTC = true;
-      // this.pdfUrl = this.myService.getTermsAndConditions();
+      this.pdfUrl = 'assets/TermsAndConditions.pdf';
     } else {
       console.error('Element with ID TermsAndConditions not found.');
     }
@@ -308,5 +361,55 @@ export class ProfilePage implements OnInit {
     readerProfilePic.onerror = (error) => {
       console.log(error);
     };
+  }
+
+  // Groups selection
+  async loadGroups() {
+    try {
+      const loadGroup = await this.getRequestsService
+        .getAllGroups('Software Engineering')
+        // .getAllGroups(this.department)
+        .toPromise();
+
+      if (loadGroup) {
+        console.log(loadGroup);
+        this.groupSelectMenu = loadGroup;
+      }
+    } catch (error) {
+      console.error('Failed to load Group', error);
+    }
+  }
+
+  previousGroup: string[] = [];
+  selectedGroup: string[] = [];
+  selectedSubGroupByCategory: { [key: string]: string[] } = {};
+
+  // Handling category selection
+  onSelectGroup() {
+    const selectedGroup = this.selectedGroup;
+    console.log('Selected Group:', selectedGroup);
+
+    // Update previously selected Group
+    this.previousGroup = [...selectedGroup];
+
+    const groupsSelected = (this.selectedGroup as string[]).join('", "');
+    console.log('groupsSelected : ');
+    console.log(groupsSelected);
+  }
+
+  // Update User details
+  updateUser() {
+    this.putRequestsService.updateUser(
+      this.authService.getProfileID(),
+      this.profilePicture,
+      this.username,
+      this.password,
+      this.name,
+      this.userType,
+      this.department,
+      (this.selectedGroup as string[]).join('", "')
+    );
+
+    this.authService.updateProfilePicture(this.profilePicture);
   }
 }
