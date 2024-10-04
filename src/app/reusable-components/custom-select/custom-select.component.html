@@ -1,0 +1,22 @@
+<div *ngIf="openModal" class="modal">
+  <ion-card>
+    <ion-item>
+      <ion-input
+        [(ngModel)]="searchTerm"
+        (ionInput)="filterOptions()"
+        placeholder="Search..."
+      ></ion-input>
+    </ion-item>
+    <ion-item-group>
+      <ion-item
+        *ngFor="let option of filteredOptions"
+        (click)="selectOption(option)"
+      >
+        {{ option }}
+      </ion-item>
+    </ion-item-group>
+    <ion-item>
+      <ion-button color="medium" (click)="closeModal()">Cancel</ion-button>
+    </ion-item>
+  </ion-card>
+</div>

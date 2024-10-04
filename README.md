@@ -110,3 +110,35 @@ EduImprovers is an Ionic Angular application designed to facilitate communicatio
 5. Generate APK:
     - Follow the steps for building the APK within Android Studio as described above.
 
+
+## DB design
+Login
+- email (Username)
+- password (hashed)
+- type of user (student faculty)
+
+Chatbox (Group chat)
+- Subject / group name (Group name or subject name for the group chat)
+- type of user (student faculty) / username (Person sending message to be linked to you)
+- Chat (Your message)
+- Department (it, Law, robotics, etc...)
+
+FAQ
+- Question (FAQ Question)
+- Answer (Answer for FAQ)
+
+Personal Chat
+- Question (Question for the Campus)
+- Answer (Answer to the question asked)
+- Subject ? (Optional to input because it can be a general question)
+- Lector / SSA (chose who you want to contact)
+- Department (it, Law, robotics, etc...)
+
+What still needs to be added, but do not where:
+- Once user is logged in (Student) he/she can join groups based on the Block that is presenting the module and if its available and if they are enrolled for that subject.
+- Once user is logged in (Faculty/ admin) can assign students to a group if students did not join a group them self or don't know how to.
+- Basic information of the user on the login page:
+    - Current year of studies
+    - Current subjects enrolled for
+    - Current Block active
+    - Current groups joined

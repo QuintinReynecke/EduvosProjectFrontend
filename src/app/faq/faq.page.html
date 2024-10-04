@@ -5,11 +5,27 @@
 </ion-header>
 
 <ion-content>
+  <ion-item>
+    <ion-label class="labelStyle">Department</ion-label>
+    <ion-button
+      class="filterButtons"
+      (click)="serviceSelect.openModalDialog()"
+    >
+      {{ selectedDepartment || 'Select Department' }}
+    </ion-button>
+    <app-custom-select
+      [options]="selectedFAQ"
+      placeholder="{{selectedDepartment}}"
+      (selectedOption)="getFAQbasedOnDepartment($event)"
+      #serviceSelect
+    ></app-custom-select>
+  </ion-item>
   <ion-list>
-    <ion-item *ngFor="let faq of faqs">
+    <ion-item *ngFor="let faq of FAQListOBJ">
       <ion-label>
-        <h2>{{ faq.question }}</h2>
-        <p>{{ faq.answer }}</p>
+        <h3>{{ faq.FAQList.department }}</h3>
+        <h2>{{ faq.FAQList.question }}</h2>
+        <p>{{ faq.FAQList.answer }}</p>
       </ion-label>
     </ion-item>
   </ion-list>

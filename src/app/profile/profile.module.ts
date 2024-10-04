@@ -7,13 +7,18 @@ import { IonicModule } from '@ionic/angular';
 import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
+import { PdfViewerModule } from 'ng2-pdf-viewer'
+import { CustomSelectPageModule } from '../reusable-components/custom-select/custom-select.module'
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ProfilePageRoutingModule
+    ProfilePageRoutingModule,
+    PdfViewerModule,
+    CustomSelectPageModule
   ],
   declarations: [ProfilePage]
 })
