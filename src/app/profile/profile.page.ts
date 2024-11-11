@@ -367,7 +367,7 @@ export class ProfilePage implements OnInit {
   async loadGroups() {
     try {
       const loadGroup = await this.getRequestsService
-        .getAllGroups('Software Engineering')
+        .getAllGroups('IT')
         // .getAllGroups(this.department)
         .toPromise();
 
